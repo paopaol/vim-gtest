@@ -217,6 +217,10 @@ endf
 
 " }}}
 
+fu! s:RunWithAsyncRun(cmd)
+  call asyncrun#run("", {'errorformat': "%f:%l:\ %m"}, a:cmd)
+endf
+
 " Public functions {{{
 
 " Run selected executable with filters, inside a tmux pane
@@ -236,6 +240,8 @@ function! gtest#GTestRun()
     endif
 
     call VimuxRunCommand(l:cmd)
+  elseif exists(':AsyncRun')
+    call s:RunWithAsyncRun(l:cmd)
   else
     if g:gtest#highlight_failing_tests
       call gtest#highlight#StartListening()
